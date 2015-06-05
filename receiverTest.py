@@ -1,5 +1,6 @@
 import socket
 from bitstring import BitArray
+from dataPrinter import dataPrinter
 
 class Receiver:
     
@@ -19,18 +20,15 @@ class Receiver:
         return BitArray('0b'+dataIn.decode('utf-8'))
 
 
-##
-##HOST = ''
-##PORT = 5000
-##receiver = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-##origem = (HOST, PORT)
-##receiver.bind(origem)
 
+fileName = 'dOut.txt'
 rec = Receiver('')
+printer = dataPrinter(fileName)
 
-while True:
-##    dataIn, cliente = receiver.recvfrom(1024)
-##    frame = BitArray('0b'+dataIn.decode('utf-8'))
+i=0
+while i<150:
     msg = int(rec.receive().bin,2)
-    print (msg.to_bytes((msg.bit_length() + 7) // 8, 'big').decode())
+    printer.printData(msg)
+    i = i+1
+printer.closeFile()
 rec.closeSocket
