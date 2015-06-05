@@ -16,7 +16,7 @@ class dataGenerator:
 
     def getData(self):
         data = BitArray(bin(int.from_bytes(self.inputDataFile.read(5).encode(), 'big')))
-        #print (data.bin)
+        print (data.bin)
         return data
 
 
