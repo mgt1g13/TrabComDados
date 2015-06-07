@@ -2,7 +2,7 @@ from bitstring import BitArray
 
 class Flagger:
 
-    def __init__(self, flag = BitArray('0b00101110')):
+    def __init__(self, flag):
         self.flag = flag
 
 
