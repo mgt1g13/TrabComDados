@@ -1,4 +1,4 @@
-#Guilherme Gaiardo e Matheus Garay
+﻿#Guilherme Gaiardo e Matheus Garay
 #classe responsavel por extrair os dados de um .txt
 #nBytes é o Numero (maximo) de Bytes que devem ser lidos em uma chamada a funçao getData
 
@@ -8,7 +8,7 @@ from bitstring import BitArray
 class dataGenerator:
 
     
-    def __init__(self, fileName, nBytes = 5):
+    def __init__(self, fileName, nBytes):
         try:
             file = open(fileName,'r')
         except IOError:
@@ -20,7 +20,7 @@ class dataGenerator:
         print("Arquivo aberto com sucesso.")
 
     def getData(self):
-        data = BitArray(bin(int.from_bytes(self.inputDataFile.read(nBytes).encode(), 'big')))
+        data = BitArray(bin(int.from_bytes(self.inputDataFile.read(self.nBytes).encode(), 'big')))
         print (data.bin)
         return data
 
