@@ -1,3 +1,5 @@
+#coding: utf-8
+
 #Guilherme Gaiardo e Matheus Garay
 #Classe que é responsavel por criar o frame.
 #Vai chamar os métodos de outras classes que adicionam diversas partes do frame
