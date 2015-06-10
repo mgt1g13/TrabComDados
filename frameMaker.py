@@ -21,7 +21,7 @@ from flagger import Flagger
 
 class frameMaker:
 
-    def __init__(self, frameSize = 5, INfileName = 'dados.txt', flag = BitArray('0b00101110'), senderId):
+    def __init__(self, frameSize = 5, INfileName = 'dados.txt', flag = BitArray('0b00101110')):
         
         self.dataGen = dataGenerator(INfileName, frameSize)
         self.flagger = Flagger(flag)
@@ -29,7 +29,7 @@ class frameMaker:
 
     def getFrame(self):
         frame = self.dataGen.getData()
+        #adicionar o checksum e metadados
         frame = self.flagger.encode(frame)
         #checar se nao tem o marcador ou a flag no meio dos dados
-        #adicionar o checksum e metadados
         return frame
