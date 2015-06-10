@@ -1,3 +1,6 @@
+﻿#Guilherme Gaiardo e Matheus Garay
+#Classe responsavel por adicionar, verificar e remover o checksum  do frame
+
 from bitstring import BitArray
 
 class Checksummer:
@@ -31,7 +34,7 @@ class Checksummer:
             if(len(checksum) == len(data[i:i+self.checksumSize])): 
                 checksum = checksum ^ data[i:i+self.checksumSize]
             else:
-                #Coloca 0s no que remaneceu do quadro para calcular o checksum
+                #Coloca 0s no que sobrou do quadro para calcular o checksum
                 temp = data[i:i+self.checksumSize]
                 temp.prepend((len(checksum)-len(data[i:i+self.checksumSize]))*BitArray('0b0'))
                 checksum = checksum ^ (temp)
@@ -39,7 +42,7 @@ class Checksummer:
         return checksum
 
 
-c = Checksummer()
-a = BitArray('0b001100111')
-c.addChecksum(a)
-print(c.verifyChecksum(a).bin)
+#c = Checksummer()
+#a = BitArray('0b00110010011')
+#c.addChecksum(a)
+#print(c.verifyChecksum(a).bin)
