@@ -1,6 +1,6 @@
 import socket
 from bitstring import BitArray
-from dataPrinter import dataPrinter
+from frameDecoder import frameDecoder
 
 class Receiver:
     
@@ -21,14 +21,11 @@ class Receiver:
 
 
 
-fileName = 'dOut.txt'
 rec = Receiver('')
-printer = dataPrinter(fileName)
+decoder = frameDecoder()
 
-i=0
-while i<150:
-    msg = int(rec.receive().bin,2)
-    printer.printData(msg)
-    i = i+1
-printer.closeFile()
-rec.closeSocket
+for x in range(0,49):
+    decoder.decodeFrame(rec.receive())
+    
+decoder.endSession()
+rec.closeSocket()
