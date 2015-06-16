@@ -15,6 +15,7 @@ class frameDecoder:
 
 
     def __init__(self, frameSize = 5, OUTfileName = 'dOut.txt', flag = BitArray('0b00101110')):
+    #def __init__(self, frameSize = 5, OUTfileName = 'dOut.txt', flag = BitArray('0b11111111')):
         self.dataPrinter = dataPrinter(OUTfileName)
         self.controlData = controlData(1, 0)
         self.checksummer = Checksummer()
@@ -23,13 +24,15 @@ class frameDecoder:
         
 
     def decodeFrame(self, frame):
+        FrameBuffer = frame
         #retira a flag
         frame = self.flagger.decode(frame)
-
+        
         #checa e retira o checksum
         frame = self.checksummer.verifyChecksum(frame)
-        #if (frame == -1):
-        #    print("checksum detectou um erro")
+        if (not frame):
+            print("checksum detectou um erro")
+            return None
 
         #retorna os dados de controle
         controlData = self.controlData.getControlData(frame)
