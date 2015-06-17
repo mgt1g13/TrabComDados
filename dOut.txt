@@ -1,1 +1,5 @@
-
+Algumas mensagens a serem transmitidas.
+O programa simula a camada de enlace, utilizando sockets
+para enviar e receber dados. Os dados a serem transmitidos
+são exatamente os caracteres deste texto. Basicamente o
+programa consiste em tres módulos

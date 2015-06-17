@@ -24,7 +24,7 @@ from checksum import Checksummer
 class frameMaker:
 
     def __init__(self, frameSize = 5, INfileName = 'dados.txt', flag = BitArray('0b00101110')):
-        
+    #def __init__(self, frameSize = 5, INfileName = 'dados.txt', flag = BitArray('0b11111111')):    
         self.dataGen = dataGenerator(INfileName, frameSize)
         self.checksummer = Checksummer()
         self.controlData = controlData(1, 0)

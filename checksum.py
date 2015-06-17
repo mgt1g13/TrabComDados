@@ -23,7 +23,7 @@ class Checksummer:
         if(checksumGiven == checksumCalculated):
             return data
         else:
-            return -1
+            return None
         
             
     def _calculateChecksum(self, data):
