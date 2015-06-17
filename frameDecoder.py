@@ -14,12 +14,10 @@ from checksum import Checksummer
 class frameDecoder:
 
 
-    def __init__(self, frameSize = 5, OUTfileName = 'dOut.txt', flag = BitArray('0b00101110')):
-        self.dataPrinter = dataPrinter(OUTfileName)
+    def __init__(self, frameSize = 5, flag = BitArray('0b00101110')):
         self.controlData = controlData(1, 0)
         self.checksummer = Checksummer()
         self.flagger = Flagger(flag)
-        self.nFrame = 0
         
 
     def decodeFrame(self, frame):
@@ -31,17 +29,10 @@ class frameDecoder:
         #if (frame == -1):
         #    print("checksum detectou um erro")
 
-        #retorna os dados de controle
+        #separa os dados de controle
         controlData = self.controlData.getControlData(frame)
-        #trata os dados de controle
+        frame = frame[24:]
+        #print (frame.bin)
+
         
-        frame = frame[20:]
-        print (frame.bin)
-        data = int(frame.bin, 2)
-        self.dataPrinter.printData(data)
-
-        self.nFrame += 1
-        return self.nFrame
-
-    def endSession(self):
-        self.dataPrinter.closeFile()
+        return (controlData,frame)
