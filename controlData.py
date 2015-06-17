@@ -26,45 +26,53 @@ class controlData:
 
 
     def getControlData(self, frame):
-        return frame.bin[0:24]
+        return frame[:24]
     
 
     def _addFrameLen(self, length):
-        frameLen = bin(length)
-        #len - 2 pois a funcao bin() retorna uma string do tipo '0b...', com dois dados nao uteis
-        i = len(frameLen) - 2
-        #laco para preencher com 0s ate ter 8 bits
-        while (i<8):
-            frameLen = '0b0' + frameLen[2:]
-            i = i + 1
-
-        return BitArray(frameLen)
+        #frameLen = bin(length)
+        ##len - 2 pois a funcao bin() retorna uma string do tipo '0b...', com dois dados nao uteis
+        #i = len(frameLen) - 2
+        ##laco para preencher com 0s ate ter 8 bits
+        #while (i<8):
+            #frameLen = '0b0' + frameLen[2:]
+            #i = i + 1
+        
+        return self._completeNBits(BitArray(bin(length)), 8)#BitArray(frameLen)
 
 
     def _addFrameNumber(self, frameNumber):
-        i = len(frameNumber) - 2
+        #i = len(frameNumber) - 2
+        
 
-        while(i<8):
-            frameNumber = '0b0' + frameNumber[2:]
-            i = i + 1
+        #while(i<8):
+            #frameNumber = '0b0' + frameNumber[2:]
+            #i = i + 1
 
-        return '0b' + BitArray(frameNumber).bin
+        
+        return self._completeNBits(BitArray(frameNumber), 8)#'0b' + BitArray(frameNumber).bin
 
 
     def _formatId(self, Id):
         #metodo para pegar a ID e transformar em um BitArray de tamanho 4 (uint)
-        i = len(Id)
+        #i = len(Id)\
 
-        while(i<4):
-            Id = '0b0' + Id[2:]
-            i = i + 1
-        return BitArray(Id)
+        #while(i<4):
+            #Id = '0b0' + Id[2:]
+            #i = i + 1
+        return self._completeNBits(BitArray(Id), 4)#BitArray(Id)
 
+    
+    def _completeNBits(self, frame, n):
+        if(not(len(frame) <= n)):
+            return frame
+        frame.prepend((n-len(frame))*BitArray('0b0'))
+        return frame 
 
 
 #f = BitArray('0b101')
 #print (f)
-#c = controlData(10,11)
+#c = controlData(1,2)
 #f = c.addControlData(f, 5)
 #print (f.bin)
 #print (c.getControlData(f))
