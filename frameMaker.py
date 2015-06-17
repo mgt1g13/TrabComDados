@@ -1,4 +1,4 @@
-#coding: utf-8
+﻿#coding: utf-8
 
 #Guilherme Gaiardo e Matheus Garay
 #Classe que é responsavel por criar o frame.
@@ -29,19 +29,20 @@ class frameMaker:
         self.checksummer = Checksummer()
         self.controlData = controlData(1, 0)
         self.flagger = Flagger(flag)
-        self.frameNumber = 0
         
 
-    def getFrame(self):
+    def getFrame(self, frameNumber):
         frame = self.dataGen.getData()
-        frame = self.controlData.addControlData(frame, self.frameNumber)
+        if (len(frame) == 1):
+            return None
+        frame = self.controlData.addControlData(frame, frameNumber)
         frame = self.checksummer.addChecksum(frame)
         frame = self.flagger.encode(frame)
         #checar se nao tem o marcador ou a flag no meio dos dados
-        self.frameNumber = (1 + self.frameNumber) % 2
+
         return frame
 
 
-fm = frameMaker()
-for x in range(0,10):
-    print(fm.getFrame().bin)
+#fm = frameMaker()
+#for x in range(0,10):
+#    print(fm.getFrame().bin)
