@@ -71,6 +71,8 @@ class DataLinkReceiverControl:
         if (frame.bin == '1'):
             return self.ackMaker.makeAck(self.expectedFrame)
         (controlData, frame) = self.frameDec.decodeFrame(frame)
+        if (controlData == None) or (frame == None):
+            return self.ackMaker.makeAck(self.expectedFrame)
         
         destId = controlData[4:8].uint
         if (destId != self.id):
