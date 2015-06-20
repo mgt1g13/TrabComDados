@@ -3,6 +3,8 @@ from frameMaker import frameMaker
 from frameDecoder import frameDecoder
 import time
 from ackMaker import ackMaker
+from ackMaker import ackDecoder
+
 
 class DataLinkSenderControl:
     def __init__(self, windowSize = 16, timeout = 5):
@@ -13,6 +15,7 @@ class DataLinkSenderControl:
         self.beginSentData = 0
         self.timeout = timeout
         self.framemaker = frameMaker()
+        self.ackDecoder = ackDecoder()
         self.fileEnd = 0
 
     def getFrame(self):
@@ -42,8 +45,13 @@ class DataLinkSenderControl:
         #retorna nada se tiver cheio o buffer e nao deu timeout (testar se o retorno for NONE)
         
     def validateAck(self, frame):
+        frame = self.ackDecoder.decodeAck(frame)
+        if(frame == None):
+            return 0
         ackNumber = frame[8:].uint
-        #print("Ack Number: ", ackNumber)
+        print("Ack Number: ", ackNumber)
+        if(ackNumber > len(self.buffer): #Caso o checsum falhe, mas mesmo assim o valor de ack seja absurdo
+            return 0
         while (self.beginSentData%len(self.buffer) != ackNumber):
             self.beginSentData = self.beginSentData + 1
         if ((self.fileEnd == 1) and (self.beginSentData == self.endSentData)):
@@ -87,7 +95,7 @@ class DataLinkReceiverControl:
         frameNumber = controlData[8:16].uint
         print("Received frame number: " +  str(frameNumber) + " expecting " + str(self.expectedFrame))
         if (frameNumber != self.expectedFrame):
-            return self.ackMaker.makeAck(self.expectedFrame)
+            return None #Não manda ack e espera#self.ackMaker.makeAck(self.expectedFrame)
 
         print("Yay, got the frame I was expecting" + str(frameNumber))
         self.dataPrinter.printData(int(frame.bin, 2))

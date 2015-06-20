@@ -23,6 +23,9 @@ class frameDecoder:
         FrameBuffer = frame
         #retira a flag
         frame = self.flagger.decode(frame)
+        if(not frame)
+            print("Flagger detectou um erro")
+            return None
         
         #checa e retira o checksum
         frame = self.checksummer.verifyChecksum(frame)

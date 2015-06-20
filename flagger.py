@@ -40,7 +40,7 @@ class Flagger:
                 end = j
 
         
-        if(start == len(frame)):
+        if(start == len(frame) or start >= end):
             return None
         return self._decode(BitArray("0b" + frame.bin[start:end]))
         

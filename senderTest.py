@@ -58,5 +58,5 @@ while True:
     print("")
     #print ("It: ", x)
     x = x+1
-    sleep(2)
+    #sleep(2)
 sender.closeSocket()

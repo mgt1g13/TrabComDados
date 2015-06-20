@@ -9,15 +9,4 @@ enviar ao módulo receptor. Mas além de enviar os dados de
 forma correta, ele deverá introduzir erros em 5% dos pacotes
 e não enviará outros 5% dos pacotes. O módulo receptor é
 responsável apensar por receber os dados, verificar se são
-válidos e enviar um ACK.Algumas mensagens a serem transmitidas.
-O programa simula a camada de enlace, utilizando sockets
-para enviar e receber dados. Os dados a serem transmitidos
-são exatamente os caracteres deste texto. Basicamente o
-programa consiste em tres módulos: O módulo que gera dados
-e envia ao módulo de "transmissão". O módulo de transmissão
-é responsavel por receber os frames do módulo de geração e
-enviar ao módulo receptor. Mas além de enviar os dados de
-forma correta, ele deverá introduzir erros em 5% dos pacotes
-e não enviará outros 5% dos pacotes. O módulo receptor é
-responsável apensar por receber os dados, verificar se são
 válidos e enviar um ACK.
