@@ -23,17 +23,19 @@ class DataLinkSenderControl:
             (frame, counter) = self.buffer[i]
             if((t1 - counter > self.timeout) and (frame != None)):
                 self.buffer[i] = (frame, time.perf_counter())
+                print("Sending frame " + str(i) + " Windown: " + str(self.beginSentData % len(self.buffer)) + ", " + str(self.endSentData%len(self.buffer)), end = "" )
                 return frame
             i = (i+1)%(len(self.buffer))
 
         #Aloca frame novo
-        if((self.endSentData - self.beginSentData) < len(self.buffer)-1):
+        if((self.endSentData - self.beginSentData) < len(self.buffer)-2):
             frame = self.framemaker.getFrame(self.endSentData%len(self.buffer))
             if (frame == None):
                 self.fileEnd = 1
                 return BitArray('0b1') #Retorna o frame '1' caso seja o fim do arquivo
             self.buffer[self.endSentData%len(self.buffer)] = (frame, time.perf_counter())
             self.endSentData = self.endSentData+1
+            print("->Sending frame "  + str(self.endSentData%len(self.buffer) -1 ) + " Windown: " + str(self.beginSentData % len(self.buffer)) + ", " + str(self.endSentData%len(self.buffer)), end = "")
             return frame
 
         return None
@@ -41,7 +43,7 @@ class DataLinkSenderControl:
         
     def validateAck(self, frame):
         ackNumber = frame[8:].uint
-        print("Ack Number: ", ackNumber)
+        #print("Ack Number: ", ackNumber)
         while (self.beginSentData%len(self.buffer) != ackNumber):
             self.beginSentData = self.beginSentData + 1
         if ((self.fileEnd == 1) and (self.beginSentData == self.endSentData)):
@@ -72,21 +74,22 @@ class DataLinkReceiverControl:
             return self.ackMaker.makeAck(self.expectedFrame)
         (controlData, frame) = self.frameDec.decodeFrame(frame)
         if (controlData == None) or (frame == None):
-            return self.ackMaker.makeAck(self.expectedFrame)
+            return None#self.ackMaker.makeAck(self.expectedFrame)
         
         destId = controlData[4:8].uint
         if (destId != self.id):
             print ("Destino invalido")
-            exit(101)
+           # exit(101)
 
         frameLen = controlData[16:24]
         #faz algo com isso...
 
         frameNumber = controlData[8:16].uint
-        print("Recieved frame number: ", frameNumber)
+        print("Received frame number: " +  str(frameNumber) + " expecting " + str(self.expectedFrame))
         if (frameNumber != self.expectedFrame):
             return self.ackMaker.makeAck(self.expectedFrame)
 
+        print("Yay, got the frame I was expecting" + str(frameNumber))
         self.dataPrinter.printData(int(frame.bin, 2))
         self.expectedFrame = (frameNumber+1)%len(self.buffer)
         return self.ackMaker.makeAck(self.expectedFrame)

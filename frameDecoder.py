@@ -28,7 +28,7 @@ class frameDecoder:
         frame = self.checksummer.verifyChecksum(frame)
         if (not frame):
             print("checksum detectou um erro")
-            return None
+            return (None, None)
 
         #separa os dados de controle
         controlData = self.controlData.getControlData(frame)

@@ -19,6 +19,7 @@ from dataGenerator import dataGenerator
 from flagger import Flagger
 from controlData import controlData
 from checksum import Checksummer
+from random import randint
 
 
 class frameMaker:

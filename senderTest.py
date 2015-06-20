@@ -2,10 +2,13 @@ import socket
 from DataLinkControl import DataLinkSenderControl
 from bitstring import BitArray
 from frameMaker import frameMaker
+from random import randint
+from time import sleep
+
 
 class Sender:
     
-    def __init__(self, host = '127.0.0.1', port = 5000):
+    def __init__(self, host = '127.0.0.1', port = 6000):
         self.dest = (host, port)
         self.ackSrc = ('', (port+1))
         self.__initSocket()
@@ -30,16 +33,17 @@ class Sender:
             return None
         else:
             ack = BitArray('0b' + ackFrame.decode('utf-8'))
-            print ("Ack bin: ", ack.bin)
+            #print ("Ack bin: ", ack.bin)
             return ack
         
-          
+
+from copy import copy        
 
 HOST = '127.0.0.1'
 PORT = 5000
 
 sender = Sender(HOST, PORT)
-dc = DataLinkSenderControl()
+dc = DataLinkSenderControl(timeout = 0.1)
 
 x = 0
 while True:
@@ -50,7 +54,9 @@ while True:
             break
     nextFrame = dc.getFrame()
     if nextFrame != None:
-        sender.send(nextFrame)    
-    print ("It: ", x)
+        sender.send(nextFrame)
+    print("")
+    #print ("It: ", x)
     x = x+1
+    sleep(2)
 sender.closeSocket()

@@ -24,7 +24,7 @@ class Checksummer:
             return data
         else:
             return None
-        
+            
             
     def _calculateChecksum(self, data):
         i = 0

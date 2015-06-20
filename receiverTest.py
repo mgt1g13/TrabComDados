@@ -5,7 +5,7 @@ from DataLinkControl import DataLinkReceiverControl
 
 class Receiver:
     
-    def __init__(self, host, source = '127.0.0.1', port = 5000):
+    def __init__(self, host, source = '127.0.0.1', port = 6000):
         self.origem = (host, port)
         self.ackDest = (source, (port+1))
         self.__initSocket()
@@ -29,7 +29,8 @@ class Receiver:
 
 
 
-
+from time import sleep
+from random import randint
 
 rec = Receiver('')
 dc = DataLinkReceiverControl()
@@ -39,8 +40,11 @@ while True:
     nextFrame = rec.receive()
     if nextFrame.bin == '0':
         break
-    rec.sendAck(dc.receiveFrame(nextFrame))
-    print("It: ", x)
+    ack = dc.receiveFrame(nextFrame)
+    if ack: #Se tiver ack para enviar (pode ter ocorrido erro na transmissão
+        rec.sendAck(ack)
+   # print("It: ", x)
     x = x+1
+    #sleep(1)
 dc.endSession()
 rec.closeSocket()

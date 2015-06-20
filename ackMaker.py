@@ -16,7 +16,7 @@ class ackMaker:
         ack = self._completeNBits(BitArray(bin(expectedFrame)), 8)
         ack.prepend(self.receiverId)
         ack.prepend(self.senderId)
-        print("Ack Binary: ", ack.bin)
+        #print("Ack Binary: ", ack.bin)
         return ack
 
         
