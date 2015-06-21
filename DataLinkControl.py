@@ -50,7 +50,7 @@ class DataLinkSenderControl:
             return 0
         ackNumber = frame[8:].uint
         print("Ack Number: ", ackNumber)
-        if(ackNumber > len(self.buffer): #Caso o checsum falhe, mas mesmo assim o valor de ack seja absurdo
+        if(ackNumber > len(self.buffer)): #Caso o checsum falhe, mas mesmo assim o valor de ack seja absurdo
             return 0
         while (self.beginSentData%len(self.buffer) != ackNumber):
             self.beginSentData = self.beginSentData + 1

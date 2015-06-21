@@ -23,7 +23,7 @@ class frameDecoder:
         FrameBuffer = frame
         #retira a flag
         frame = self.flagger.decode(frame)
-        if(not frame)
+        if(not frame):
             print("Flagger detectou um erro")
             return None
         
