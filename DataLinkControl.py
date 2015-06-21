@@ -26,7 +26,7 @@ class DataLinkSenderControl:
             (frame, counter) = self.buffer[i]
             if((t1 - counter > self.timeout) and (frame != None)):
                 self.buffer[i] = (frame, time.perf_counter())
-                print("Sending frame " + str(i) + " Windown: " + str(self.beginSentData % len(self.buffer)) + ", " + str(self.endSentData%len(self.buffer)), end = "" )
+                print("Sending frame " + str(i) + " Windown: " + str(self.beginSentData % len(self.buffer)) + ", " + str(self.endSentData%len(self.buffer)) )
                 return frame
             i = (i+1)%(len(self.buffer))
 
@@ -38,7 +38,7 @@ class DataLinkSenderControl:
                 return BitArray('0b1') #Retorna o frame '1' caso seja o fim do arquivo
             self.buffer[self.endSentData%len(self.buffer)] = (frame, time.perf_counter())
             self.endSentData = self.endSentData+1
-            print("->Sending frame "  + str(self.endSentData%len(self.buffer) -1 ) + " Windown: " + str(self.beginSentData % len(self.buffer)) + ", " + str(self.endSentData%len(self.buffer)), end = "")
+            print("->Sending frame "  + str(self.endSentData%len(self.buffer) -1 ) + " Windown: " + str(self.beginSentData % len(self.buffer)) + ", " + str(self.endSentData%len(self.buffer)))
             return frame
 
         return None
@@ -81,8 +81,11 @@ class DataLinkReceiverControl:
         if (frame.bin == '1'):
             return self.ackMaker.makeAck(self.expectedFrame)
         (controlData, frame) = self.frameDec.decodeFrame(frame)
+        #print(controlData)
+        #print(frame)
         if (controlData == None) or (frame == None):
-            return None#self.ackMaker.makeAck(self.expectedFrame)
+            print("I am here")
+            return self.ackMaker.makeAck(self.expectedFrame)
         
         destId = controlData[4:8].uint
         if (destId != self.id):
@@ -93,12 +96,12 @@ class DataLinkReceiverControl:
         #faz algo com isso...
 
         frameNumber = controlData[8:16].uint
-        print("Received frame number: " +  str(frameNumber) + " expecting " + str(self.expectedFrame))
+        #print("Received frame number: " +  str(frameNumber) + " expecting " + str(self.expectedFrame))
         if (frameNumber != self.expectedFrame):
-            return None #Não manda ack e espera#self.ackMaker.makeAck(self.expectedFrame)
+            return self.ackMaker.makeAck(self.expectedFrame)
 
         print("Yay, got the frame I was expecting" + str(frameNumber))
-        self.dataPrinter.printData(int(frame.bin, 2))
+        self.dataPrinter.printData(bytes.fromhex(frame.hex))
         self.expectedFrame = (frameNumber+1)%len(self.buffer)
         return self.ackMaker.makeAck(self.expectedFrame)
 

@@ -4,13 +4,15 @@
 
 import sys
 from bitstring import BitArray
+import codecs
+
 
 class dataGenerator:
 
     
     def __init__(self, fileName, nBytes):
         try:
-            file = open(fileName,'r')
+            file = open(fileName,'rb')
         except IOError:
             print("Nao abriu o arquivo " + fileName)
             sys.exit(1)
@@ -20,15 +22,24 @@ class dataGenerator:
         print("Arquivo aberto com sucesso.")
 
     def getData(self):
-        data = BitArray(bin(int.from_bytes(self.inputDataFile.read(self.nBytes).encode(), 'big')))
+        data = BitArray(self.inputDataFile.read(self.nBytes))
         #print (data.bin)
         return data
 
 
 
-#file = "dados.txt"
-#dataGen = dataGenerator(file)
-#d = dataGen.getData()
+#file = "len.jpg"
+#out = open('teste.jpg', 'wb')
+#dataGen = dataGenerator(file, 5)
+#while True:
+#    d = dataGen.getData()
+    #print(d)
+#    if(d == ''):
+#        break 
+#    d =  bytes.fromhex(d.hex)
+    
+#    out.write(d)
+#out.close()
 #print (d.bin)
 #c = int(d.bin,2)
 #print (c.to_bytes((c.bit_length() + 7) // 8, 'big').decode())

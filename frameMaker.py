@@ -24,7 +24,7 @@ from random import randint
 
 class frameMaker:
 
-    def __init__(self, frameSize = 5, INfileName = 'dados.txt', flag = BitArray('0b00101110')): 
+    def __init__(self, frameSize = 5, INfileName = 'Carlos.jpg', flag = BitArray('0b00101110')): 
         self.dataGen = dataGenerator(INfileName, frameSize)
         self.checksummer = Checksummer()
         self.controlData = controlData(1, 0)
@@ -33,7 +33,7 @@ class frameMaker:
 
     def getFrame(self, frameNumber):
         frame = self.dataGen.getData()
-        if (len(frame) == 1):
+        if (frame == ''):
             return None
         frame = self.controlData.addControlData(frame, frameNumber)
         frame = self.checksummer.addChecksum(frame)

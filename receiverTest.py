@@ -44,7 +44,7 @@ while True:
     if ack: #Se tiver ack para enviar (pode ter ocorrido erro na transmissão
         rec.sendAck(ack)
    # print("It: ", x)
-    x = x+1
+    #x = x+1
     #sleep(1)
 dc.endSession()
 rec.closeSocket()

@@ -55,7 +55,7 @@ while True:
     nextFrame = dc.getFrame()
     if nextFrame != None:
         sender.send(nextFrame)
-    print("")
+    #print("")
     #print ("It: ", x)
     x = x+1
     #sleep(2)
