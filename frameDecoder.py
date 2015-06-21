@@ -22,20 +22,23 @@ class frameDecoder:
     def decodeFrame(self, frame):
         FrameBuffer = frame
         #retira a flag
+       
         frame = self.flagger.decode(frame)
+       
         if(not frame):
             print("Flagger detectou um erro")
             return None
         
         #checa e retira o checksum
         frame = self.checksummer.verifyChecksum(frame)
+       # print(str(len(frame)))
         if (not frame):
             print("checksum detectou um erro")
             return (None, None)
 
         #separa os dados de controle
         controlData = self.controlData.getControlData(frame)
-        frame = frame[24:]
+        frame = frame[16:]
         #print (frame.bin)
 
         

@@ -16,8 +16,8 @@ class controlData:
 
 
     def addControlData(self, frame, frameNumber):
-        controlData = self._addFrameLen(len(frame))
-        controlData.prepend(self._addFrameNumber(bin(frameNumber)))
+        #controlData = self._addFrameLen(len(frame))
+        controlData = self._addFrameNumber(bin(frameNumber))
         controlData.prepend(self.destId)
         controlData.prepend(self.senderId)
 
@@ -26,7 +26,7 @@ class controlData:
 
 
     def getControlData(self, frame):
-        return frame[:24]
+        return frame[:16]
     
 
     def _addFrameLen(self, length):
@@ -38,7 +38,7 @@ class controlData:
             #frameLen = '0b0' + frameLen[2:]
             #i = i + 1
         
-        return self._completeNBits(BitArray(bin(length)), 8)#BitArray(frameLen)
+        return self._completeNBits(BitArray(bin(length)), 16)#BitArray(frameLen)
 
 
     def _addFrameNumber(self, frameNumber):
@@ -65,6 +65,7 @@ class controlData:
     
     def _completeNBits(self, frame, n):
         if(not(len(frame) <= n)):
+            print("EEEERRROOOO" + str(len(frame)) + " " + str(n))
             return frame
         frame.prepend((n-len(frame))*BitArray('0b0'))
         return frame 

@@ -28,16 +28,16 @@ class dataGenerator:
 
 
 
-#file = "len.jpg"
+#file = "Carlos.jpg"
 #out = open('teste.jpg', 'wb')
-#dataGen = dataGenerator(file, 5)
+#dataGen = dataGenerator(file, 1500)
 #while True:
 #    d = dataGen.getData()
-    #print(d)
+#    print(d)
 #    if(d == ''):
 #        break 
 #    d =  bytes.fromhex(d.hex)
-    
+   
 #    out.write(d)
 #out.close()
 #print (d.bin)

@@ -44,13 +44,15 @@ class Flagger:
             return None
         return self._decode(BitArray("0b" + frame.bin[start:end]))
         
+#from dataGenerator import dataGenerator
 
+#flagger = Flagger(BitArray('0b00101110'))
+#file = "Carlos.jpg"
+#dataGen = dataGenerator(file, 15)
 
-#flagger = Flagger(BitArray("0b11"))
-#a = BitArray('0b010')
-#print(a)
+#a = dataGen.getData()
+#print(len(a))
 #b = flagger.encode(a)
-#print("0b" + b.bin)
-#b.append(BitArray("0b0001000"))
-#print(flagger.decode(b))
+#print(len(b))
+#print(len(flagger.decode(b)))
 

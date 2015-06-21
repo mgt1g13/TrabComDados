@@ -20,7 +20,7 @@ class Receiver:
         self._ackSocket.close()
 
     def receive(self):
-        dataIn, client = self._socket.recvfrom(1024)
+        dataIn, client = self._socket.recvfrom(4096)
         return BitArray('0b'+dataIn.decode('utf-8'))
 
     def sendAck(self, frame):

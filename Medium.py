@@ -36,14 +36,14 @@ receiverAckSocket.setblocking(0)
 i = 0
 while True:
     try:
-        dataFrame, client = senderSocket.recvfrom(1024)
+        dataFrame, client = senderSocket.recvfrom(4096)
         send = randint(1, 100)
-        if(send > 20):
+        if(send > 0):
             print("I am here")
             receiverSocket.sendto(dataFrame, ('127.0.0.1', receiverPort))
         elif (send > 10):
             if(len(dataFrame) > 30):
-                print("Added Error")
+               # print("Added Error")
                 temp = BitArray('0b' + dataFrame.decode('utf-8'))
                 temp[10] = not temp[10]
                 temp[11] = not temp[11]
@@ -56,16 +56,16 @@ while True:
             else:
                 receiverSocket.sendto(dataFrame, ('127.0.0.1', receiverPort))
         else:
-            print("Lost package")
+            None#print("Lost package")
     except socket.error:
-            None
+        None
     
     try:
         
         ackFrame, client = receiverAckSocket.recvfrom(1024)
         send = randint(1,100)
        
-        if(send > 20):
+        if(send > 0):
             senderAckSocket.sendto(ackFrame, ('127.0.0.1', senderAckPort))
         elif (send > 10):
             print("Added Ack Error")

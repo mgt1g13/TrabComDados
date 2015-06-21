@@ -24,7 +24,7 @@ from random import randint
 
 class frameMaker:
 
-    def __init__(self, frameSize = 5, INfileName = 'Carlos.jpg', flag = BitArray('0b00101110')): 
+    def __init__(self, frameSize = 256, INfileName = 'Carlos.jpg', flag = BitArray('0b00101110')): 
         self.dataGen = dataGenerator(INfileName, frameSize)
         self.checksummer = Checksummer()
         self.controlData = controlData(1, 0)
@@ -35,8 +35,11 @@ class frameMaker:
         frame = self.dataGen.getData()
         if (frame == ''):
             return None
+        #print("Antes controle -> " + str(len(frame)))
         frame = self.controlData.addControlData(frame, frameNumber)
+        #print("Depois controle -> " + str(len(frame)))
         frame = self.checksummer.addChecksum(frame)
+        #print("Depois check -> " + str(len(frame)))
         frame = self.flagger.encode(frame)
         #checar se nao tem o marcador ou a flag no meio dos dados
 

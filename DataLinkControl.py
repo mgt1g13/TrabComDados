@@ -26,19 +26,20 @@ class DataLinkSenderControl:
             (frame, counter) = self.buffer[i]
             if((t1 - counter > self.timeout) and (frame != None)):
                 self.buffer[i] = (frame, time.perf_counter())
-                print("Sending frame " + str(i) + " Windown: " + str(self.beginSentData % len(self.buffer)) + ", " + str(self.endSentData%len(self.buffer)) )
+                #print("Sending frame " + str(i) + " Windown: " + str(self.beginSentData % len(self.buffer)) + ", " + str(self.endSentData%len(self.buffer)) )
                 return frame
             i = (i+1)%(len(self.buffer))
 
         #Aloca frame novo
         if((self.endSentData - self.beginSentData) < len(self.buffer)-2):
             frame = self.framemaker.getFrame(self.endSentData%len(self.buffer))
+            print(self.endSentData%len(self.buffer))
             if (frame == None):
                 self.fileEnd = 1
                 return BitArray('0b1') #Retorna o frame '1' caso seja o fim do arquivo
             self.buffer[self.endSentData%len(self.buffer)] = (frame, time.perf_counter())
             self.endSentData = self.endSentData+1
-            print("->Sending frame "  + str(self.endSentData%len(self.buffer) -1 ) + " Windown: " + str(self.beginSentData % len(self.buffer)) + ", " + str(self.endSentData%len(self.buffer)))
+            #print("->Sending frame "  + str(self.endSentData%len(self.buffer) -1 ) + " Windown: " + str(self.beginSentData % len(self.buffer)) + ", " + str(self.endSentData%len(self.buffer)))
             return frame
 
         return None
@@ -49,7 +50,7 @@ class DataLinkSenderControl:
         if(frame == None):
             return 0
         ackNumber = frame[8:].uint
-        print("Ack Number: ", ackNumber)
+        #print("Ack Number: ", ackNumber)
         if(ackNumber > len(self.buffer)): #Caso o checsum falhe, mas mesmo assim o valor de ack seja absurdo
             return 0
         while (self.beginSentData%len(self.buffer) != ackNumber):
@@ -66,7 +67,7 @@ from dataPrinter import dataPrinter
 from ackMaker import ackMaker
 
 class DataLinkReceiverControl:
-    def __init__(self, windowSize = 16, rcId = 0, OUTfileName = 'dOut.txt'):
+    def __init__(self, windowSize = 16, rcId = 0, OUTfileName = 'dOut.jpg'):
         self.buffer = []
         for i in range(windowSize):
             self.buffer.append((BitArray('0b0'), time.perf_counter()))
@@ -84,7 +85,7 @@ class DataLinkReceiverControl:
         #print(controlData)
         #print(frame)
         if (controlData == None) or (frame == None):
-            print("I am here")
+            #print("I am here")
             return self.ackMaker.makeAck(self.expectedFrame)
         
         destId = controlData[4:8].uint
@@ -92,15 +93,15 @@ class DataLinkReceiverControl:
             print ("Destino invalido")
            # exit(101)
 
-        frameLen = controlData[16:24]
+        #frameLen = controlData[16:32]
         #faz algo com isso...
 
         frameNumber = controlData[8:16].uint
-        #print("Received frame number: " +  str(frameNumber) + " expecting " + str(self.expectedFrame))
+        print("Received frame number: " +  str(frameNumber) + " expecting " + str(self.expectedFrame))
         if (frameNumber != self.expectedFrame):
             return self.ackMaker.makeAck(self.expectedFrame)
 
-        print("Yay, got the frame I was expecting" + str(frameNumber))
+        #print("Yay, got the frame I was expecting" + str(frameNumber) + " " + str(len(frame)))
         self.dataPrinter.printData(bytes.fromhex(frame.hex))
         self.expectedFrame = (frameNumber+1)%len(self.buffer)
         return self.ackMaker.makeAck(self.expectedFrame)

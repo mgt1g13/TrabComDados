@@ -43,7 +43,7 @@ HOST = '127.0.0.1'
 PORT = 5000
 
 sender = Sender(HOST, PORT)
-dc = DataLinkSenderControl(timeout = 0.1)
+dc = DataLinkSenderControl(timeout = 10)
 
 x = 0
 while True:
@@ -53,6 +53,7 @@ while True:
             sender.send(BitArray('0b0'))
             break
     nextFrame = dc.getFrame()
+    #print(len(nextFrame))
     if nextFrame != None:
         sender.send(nextFrame)
     #print("")
