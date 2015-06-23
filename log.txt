@@ -1,0 +1,10 @@
+Pacotes totais: 1078
+Pacotes enviados com erro: 43
+Pacotes perdidos: 56
+Pacotes enviados com sucesso: 979
+
+
+Acks totais: 1015
+Acks repassados com erro: 40
+Acks perdidos: 33
+Acks transmitidos com sucesso: 942

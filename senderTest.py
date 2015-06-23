@@ -43,14 +43,14 @@ HOST = '127.0.0.1'
 PORT = 5000
 
 sender = Sender(HOST, PORT)
-dc = DataLinkSenderControl(timeout = 10)
+dc = DataLinkSenderControl(timeout = 0.5)
 
 x = 0
 while True:
     ack = sender.receiveAck()
     if ack != None:
         if dc.validateAck(ack) == 1:
-            sender.send(BitArray('0b0'))
+            #sender.send(BitArray('0b0'))
             break
     nextFrame = dc.getFrame()
     #print(len(nextFrame))
@@ -59,5 +59,5 @@ while True:
     #print("")
     #print ("It: ", x)
     x = x+1
-    #sleep(2)
+    #sleep(0.1)
 sender.closeSocket()

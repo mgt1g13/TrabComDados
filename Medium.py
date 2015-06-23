@@ -1,6 +1,8 @@
 from bitstring import BitArray
 import socket
 from random import randint
+import signal
+import sys
 
 
 
@@ -33,17 +35,48 @@ receiverAckSocket.bind(('', receiverAckPort))
 receiverAckSocket.setblocking(0)
 
 ########################################################################
-i = 0
+
+packageErrors = 0
+packagesLost = 0
+packagesReceived = 0
+packagesPassed = 0
+
+ackErrors = 0
+ackLost = 0
+ackReceived = 0
+ackPassed = 0
+
+def signal_handler(signal, frame):
+        print('You pressed Ctrl+C!')
+        f = open('log.txt', 'w')
+        f.write("Pacotes totais: " + str(packagesReceived) + '\n')
+        f.write("Pacotes enviados com erro: " + str(packageErrors) + '\n')
+        f.write("Pacotes perdidos: " + str(packagesLost) + '\n')
+        f.write("Pacotes enviados com sucesso: " + str(packagesPassed) + '\n')
+
+        f.write("\n\nAcks totais: " + str(ackReceived) + '\n')
+        f.write("Acks repassados com erro: " + str(ackErrors) + '\n')
+        f.write("Acks perdidos: " + str(ackLost) + '\n')
+        f.write("Acks transmitidos com sucesso: " + str(ackPassed) + '\n')
+
+        f.close()
+        sys.exit(0)
+
+signal.signal(signal.SIGINT, signal_handler)
+
 while True:
     try:
         dataFrame, client = senderSocket.recvfrom(4096)
+        packagesReceived = packagesReceived +1
         send = randint(1, 100)
-        if(send > 0):
-            print("I am here")
+        if(send > 10):
+            #print("I am here")
+            packagesPassed = packagesPassed + 1
             receiverSocket.sendto(dataFrame, ('127.0.0.1', receiverPort))
-        elif (send > 10):
+        elif (send > 5):
             if(len(dataFrame) > 30):
-               # print("Added Error")
+                print("Added Error")
+                packageErrors = packageErrors + 1
                 temp = BitArray('0b' + dataFrame.decode('utf-8'))
                 temp[10] = not temp[10]
                 temp[11] = not temp[11]
@@ -54,9 +87,11 @@ while True:
                 temp[30] = not temp[30]
                 receiverSocket.sendto(bytes(temp.bin, 'utf-8'), ('127.0.0.1', receiverPort))
             else:
+                packagesPassed = packagesPassed + 1
                 receiverSocket.sendto(dataFrame, ('127.0.0.1', receiverPort))
         else:
-            None#print("Lost package")
+            packagesLost = packagesLost + 1
+            print("Lost package")
     except socket.error:
         None
     
@@ -64,18 +99,23 @@ while True:
         
         ackFrame, client = receiverAckSocket.recvfrom(1024)
         send = randint(1,100)
+        ackReceived = ackReceived + 1
        
-        if(send > 0):
+        if(send > 10):
+            ackPassed = ackPassed + 1
             senderAckSocket.sendto(ackFrame, ('127.0.0.1', senderAckPort))
-        elif (send > 10):
+        elif (send > 5):
             print("Added Ack Error")
             temp = BitArray('0b' + ackFrame.decode('utf-8'))
             if(len(temp) > 9):
                 temp[9] = not temp[9]
+                ackErrors = ackErrors + 1
                 senderAckSocket.sendto(bytes(temp.bin, 'utf-8'), ('127.0.0.1', senderAckPort))
             else:
+                ackPassed = ackPassed + 1
                 senderAckSocket.sendto(ackFrame, ('127.0.0.1', senderAckPort))
         else:
+            ackLost = ackLost + 1
             print("Lost ACK")
        # i = i + 1
     except socket.error:

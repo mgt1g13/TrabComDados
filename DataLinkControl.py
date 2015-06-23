@@ -22,24 +22,31 @@ class DataLinkSenderControl:
         #itera para verificar timeout
         i = self.beginSentData % len(self.buffer)
         t1 = time.perf_counter()
+        
+        expired_time = 0
+        index = -1
         while(i != self.endSentData%len(self.buffer)):
             (frame, counter) = self.buffer[i]
             if((t1 - counter > self.timeout) and (frame != None)):
                 self.buffer[i] = (frame, time.perf_counter())
                 #print("Sending frame " + str(i) + " Windown: " + str(self.beginSentData % len(self.buffer)) + ", " + str(self.endSentData%len(self.buffer)) )
+                index = i
+                expired_time = t1 - counter
                 return frame
             i = (i+1)%(len(self.buffer))
 
+    
+        
         #Aloca frame novo
         if((self.endSentData - self.beginSentData) < len(self.buffer)-2):
             frame = self.framemaker.getFrame(self.endSentData%len(self.buffer))
-            print(self.endSentData%len(self.buffer))
+            #print(self.endSentData%len(self.buffer))
             if (frame == None):
                 self.fileEnd = 1
-                return BitArray('0b1') #Retorna o frame '1' caso seja o fim do arquivo
+                return None#BitArray('0b1') #Retorna o frame '1' caso seja o fim do arquivo
             self.buffer[self.endSentData%len(self.buffer)] = (frame, time.perf_counter())
             self.endSentData = self.endSentData+1
-            #print("->Sending frame "  + str(self.endSentData%len(self.buffer) -1 ) + " Windown: " + str(self.beginSentData % len(self.buffer)) + ", " + str(self.endSentData%len(self.buffer)))
+            print("->Sending frame "  + str(self.endSentData%len(self.buffer) -1 ) + " Windown: " + str(self.beginSentData % len(self.buffer)) + ", " + str(self.endSentData%len(self.buffer)))
             return frame
 
         return None

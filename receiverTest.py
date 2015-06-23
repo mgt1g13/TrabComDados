@@ -20,7 +20,11 @@ class Receiver:
         self._ackSocket.close()
 
     def receive(self):
-        dataIn, client = self._socket.recvfrom(4096)
+        self._socket.settimeout(3)
+        try:
+            dataIn, client = self._socket.recvfrom(4096)
+        except socket.timeout:
+            return None
         return BitArray('0b'+dataIn.decode('utf-8'))
 
     def sendAck(self, frame):
@@ -30,21 +34,27 @@ class Receiver:
 
 
 from time import sleep
+from time import perf_counter
 from random import randint
+
 
 rec = Receiver('')
 dc = DataLinkReceiverControl()
+comeco = 1
 
 x = 0
 while True:
     nextFrame = rec.receive()
-    if nextFrame.bin == '0':
+    if not nextFrame:
+        if comeco == 1:
+            continue
         break
+    comeco = 0
     ack = dc.receiveFrame(nextFrame)
     if ack: #Se tiver ack para enviar (pode ter ocorrido erro na transmissão
         rec.sendAck(ack)
    # print("It: ", x)
     #x = x+1
-    #sleep(1)
+    #sleep(0.01s)
 dc.endSession()
 rec.closeSocket()
